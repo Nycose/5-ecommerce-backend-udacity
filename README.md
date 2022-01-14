@@ -20,7 +20,7 @@ Your task is to build an API for a shopping application.
 - Draft a map of endpoints to expose for the frontend.
 
 #### Database Setup
-- Create a connection to a Postgres database from the provided Node application.
+- Create a connection to a Postgres database from the Node application.
 - Add tables and columns according to the database schema doc from step 1.
 
 ####Create Models
