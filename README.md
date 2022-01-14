@@ -25,11 +25,11 @@ psql postgres
 Create the database
 
 ```
-CREATE DATABASE <storefront_dev>;
+CREATE DATABASE storefront_dev;
 ```
 
 ```
-CREATE DATABASE <storefront_test>;
+CREATE DATABASE storefront_test;
 ```
 
 Connect to the database
