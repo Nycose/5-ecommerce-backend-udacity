@@ -1,148 +1,89 @@
 # Storefront Backend Project
 
-## Getting Started
+## Setup
 
-Install dependencies - npm install
+### PostgreSQL
 
-### Required Technologies
+Make sure that you habe PostgreSQL installed, otherwise install [PostgreSQL](https://www.postgresql.org) from their homepage.
 
-This application makes use of the following libraries:
+```
+postgres --version
+```
 
--   Postgres for the database
--   Node/Express for the application logic
--   dotenv from npm for managing environment variables
--   db-migrate from npm for migrations
--   jsonwebtoken from npm for working with JWTs
--   jasmine from npm for testing
+Start Postgres with
 
-For the purposes of this project submission, I have included database info in the .env file. There you will find information about the port and any credentials. You will also find the ENVI variable where you can change from test to production databases.
+```
+sudo -u postgres -i
+```
 
-### 1. Create Postgres database
+and enter the Postgres terminal with
 
-For this api to work, you will need to create a psql user as well as a psql database on your local machine titled "storefront_dev" and another "storefront_test":
+```
+psql postgres
+```
 
-CREATE USER app WITH PASSWORD 'Welcome1';
+Create the database
 
-CREATE DATABASE storefront_dev;
-CREATE DATABASE storefront_test;
+```
+CREATE DATABASE <storefront_dev>;
+```
 
-Connect to database and grant permissions:
+```
+CREATE DATABASE <storefront_test>;
+```
 
+Connect to the database
+
+```
 \c storefront_dev
-GRANT ALL PRIVILEGES ON DATABASE storefront_dev TO app;
+```
 
-\c storefront_test
-GRANT ALL PRIVILEGES ON DATABASE storefront_test TO app;
+Display the tables (no relations should be found)
 
-### 2. Run database migrations
+```
+\dt
+```
 
-To run database migrations and create the tables that will be used, make sure to have db-migrate installed globally on your machine and run the following scripts:
+### Install the node modules
 
-npm run test
+```
+npm install
+```
+
+you can start this API with
+
+```
 npm run start
+```
 
-The following tables should have been created in the database
+The server runs on localhost:3000 by default.
 
--   users
--   products
--   orders
--   order_products
+## Routes and Database Schemas
 
-### 3. Interacting with API
+[Google Doc w/ Endpoint Info](https://docs.google.com/document/d/1zOQ4KsdVr0wzUXLTnyZ78oaQMspr_5aCYGScruuyDYw/edit?usp=sharing)
 
-Once the db is setup, you can fire up Postman and send some requests.
+```
+/orders
+GET  http://localhost:3000/orders
+GET  http://localhost:3000/orders/:id
+POST  http://localhost:3000/orders
+POST  http://localhost:3000/orders/:id/products
+DELETE   http://localhost:3000/orders/:id
+```
 
-Many of the routes will require a JWT for authentication so be sure to go ahead and create a user by sending a POST request to '/users'
-Example request body:
-{
-"username": "jdoe",
-"password_digest": "Welcome"
-}
+```
+/products
+GET  http://localhost:3000/products
+GET  http://localhost:3000/products/:id
+GET  http://localhost:3000/products/categories
+POST  http://localhost:3000/products
+DELETE   http://localhost:3000/products/:id
+```
 
-The server should respond with your JWT. Go ahead and copy the JWT and add it to your Postman headers. Here's an example of how your header should be formatted on request that require auth:
-
-Accept:application/json
-Content-Type:application/json
-Authorization:Bearer token
-
-### User endpoints
-
--   **index [token required]:** '/users' [GET]
--   **show [token required]:** '/users/:userid' [GET]
--   **create [token required]:** '/users' [POST]
-    {
-    "username": "jdoe",
-    "password": "welcome"
-    }
-
-### Product endpoints
-
--   **index:** '/products' [GET]
--   **show:** '/products/:id' [GET]
--   **products by category:** '/products/categories/:cat' [GET]
--   **product categories:** '/products/categories' [GET]
--   **delete product:** 'products/:id' [DELETE]
--   **create [token required]:** '/products' [POST]
-    {
-    "name": "blue sweater",
-    "price": 25,
-    "category": "apparel"
-    }
-
-### Order endpoints
-
--   **show [token required]:** '/orders/:id' [GET]
--   **Current Order by user [token required]:** '/orders/users/:userid' [GET]
--   **Add product to order:** '/orders/:id/products' [POST]
-    {
-    "name": "blue sweater",
-    "price": 25,
-    "category": "apparel"
-    }
-
-### Order endpoints
-
-GET http://localhost:3000/orders
-
-[
-{
-"id": 1,
-"status": "open",
-"user_id": "1"
-}
-]
-
-GET http://localhost:3000/orders/:id
-
-{
-"id": 1,
-"status": "open",
-"user_id": "1"
-}
-
-POST http://localhost:3000/orders {"status": "open", "user_id": "1"}
-
-{
-"id": 2,
-"status": "open",
-"user_id": "1"
-}
-
-POST http://localhost:3000/orders/:id/products {"productId": 1, "quantity": 3}
-
-{
-"id": 1,
-"quantity": 3,
-"order_id": "1",
-"product_id": "1"
-}
-
-DELETE http://localhost:3000/orders/:id
-
-{
-"id": 1,
-"status": "open",
-"user_id": "1"
-}
-
-### Product endpoints
+```
+/users
+GET  http://localhost:3000/users
+GET  http://localhost:3000/users/:id
+POST  http://localhost:3000/users
+POST   http://localhost:3000/users/login
+```

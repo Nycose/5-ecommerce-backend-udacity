@@ -160,7 +160,7 @@ var ProductStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "SELECT DISTINCT category FROM " + this.table + " INNER JOIN categories ON products.cat_id = categories.id";
+                        sql = "SELECT DISTINCT category FROM " + this.table + " INNER JOIN categories ON products.cat_id = categories.id ORDER BY category ASC";
                         return [4 /*yield*/, conn.query(sql)];
                     case 2:
                         result = _a.sent();
