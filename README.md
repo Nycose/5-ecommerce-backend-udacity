@@ -1,7 +1,5 @@
 # Storefront Backend Project
 
-## About
-
 This project is for the [Udacity Full Stack JavaScript Developer Nanodegree](https://www.udacity.com/course/full-stack-javascript-developer-nanodegree--nd0067).
 
 ### Project Summary
