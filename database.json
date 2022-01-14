@@ -1,0 +1,19 @@
+{
+    "dev": {
+        "driver": "postgres",
+        "user": { "ENV": "POSTGRES_USER" },
+        "password": { "ENV": "POSTGRES_PASSWORD" },
+        "host": { "ENV": "POSTGRES_HOST" },
+        "database": { "ENV": "POSTGRES_DB" },
+        "port": { "ENV": "PORT" }
+    },
+    "test": {
+        "driver": "postgres",
+        "user": { "ENV": "POSTGRES_USER" },
+        "password": { "ENV": "POSTGRES_PASSWORD" },
+        "host": { "ENV": "POSTGRES_HOST" },
+        "database": { "ENV": "POSTGRES_DB_TEST" },
+        "port": { "ENV": "PORT" }
+    },
+    "sql-file": true
+}
