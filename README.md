@@ -4,7 +4,7 @@
 
 ### PostgreSQL
 
-Make sure that you habe PostgreSQL installed, otherwise install [PostgreSQL](https://www.postgresql.org) from their homepage.
+Make sure that you have PostgreSQL installed, otherwise install [PostgreSQL](https://www.postgresql.org) from their homepage.
 
 ```
 postgres --version
