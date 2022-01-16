@@ -152,7 +152,7 @@ var ProductStore = /** @class */ (function () {
     };
     ProductStore.prototype.getProductCategories = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, err_5;
+            var conn, sql, categories, result, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -163,9 +163,10 @@ var ProductStore = /** @class */ (function () {
                         sql = "SELECT DISTINCT category FROM " + this.table + " INNER JOIN categories ON products.cat_id = categories.id ORDER BY category ASC";
                         return [4 /*yield*/, conn.query(sql)];
                     case 2:
-                        result = _a.sent();
+                        categories = _a.sent();
+                        result = categories.rows.map(function (c) { return c.category; });
                         conn.release();
-                        return [2 /*return*/, result.rows];
+                        return [2 /*return*/, result];
                     case 3:
                         err_5 = _a.sent();
                         throw new Error("Could not get categories " + err_5);

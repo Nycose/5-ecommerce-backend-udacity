@@ -1,3 +1,4 @@
+import { Query, QueryResult } from 'pg';
 import db from '../database';
 import { ProductInterface, Category } from '../interfaces/product';
 
@@ -67,9 +68,10 @@ export class ProductStore {
         try {
             const conn = await db.connect();
             const sql = `SELECT DISTINCT category FROM ${this.table} INNER JOIN categories ON products.cat_id = categories.id ORDER BY category ASC`;
-            const result = await conn.query(sql);
+            const categories = await conn.query(sql);
+            const result = categories.rows.map((c) => c.category);
             conn.release();
-            return result.rows;
+            return result;
         } catch (err) {
             throw new Error(`Could not get categories ${err}`);
         }

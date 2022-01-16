@@ -38,13 +38,17 @@ const create = async (req: Request, res: Response) => {
         if (users.find((u) => u.username === username)) {
             throw new Error('User already exists');
         } else {
-            const newUser = await store.create(
+            await store.create(
                 first_name,
                 last_name,
                 username,
                 password,
                 is_admin
             );
+            const newUser = {
+                username: username,
+                is_admin: is_admin,
+            };
             const token = jwt.sign(
                 { user: newUser },
                 process.env.TOKEN_SECRET as Secret

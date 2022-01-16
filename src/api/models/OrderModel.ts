@@ -1,5 +1,7 @@
 import db from '../database';
-import { OrderInterface } from '../interfaces/order';
+import { OrderInterface, OrderProducts } from '../interfaces/order';
+import { OrderProductsStore } from './OrderProductsModel';
+import { isValidStatus } from '../utils/order-validation';
 
 export class OrderStore {
     async index(): Promise<OrderInterface[]> {
@@ -26,9 +28,10 @@ export class OrderStore {
         }
     }
 
-    async create(order: OrderInterface) {
+    async create(order: OrderInterface): Promise<OrderInterface> {
         try {
             const { status, user_id } = order;
+            isValidStatus(status);
             const conn = await db.connect();
             const sql =
                 'INSERT INTO orders (status, user_id) VALUES ($1, $2) RETURNING *';
@@ -36,7 +39,20 @@ export class OrderStore {
             conn.release();
             return result.rows[0];
         } catch (err) {
-            throw new Error(`Could not create user ${err}`);
+            throw new Error(`Could not create order ${err}`);
+        }
+    }
+
+    async edit(orderId: number, status: string): Promise<OrderInterface> {
+        try {
+            isValidStatus(status);
+            const conn = await db.connect();
+            const sql = `UPDATE orders SET status = $1 WHERE id=${orderId} RETURNING *;`;
+            const result = await conn.query(sql, [status]);
+            conn.release();
+            return result.rows[0];
+        } catch (err) {
+            throw new Error(`Could not edit order: ${err}`);
         }
     }
 
@@ -56,42 +72,29 @@ export class OrderStore {
         quantity: number,
         orderId: number,
         productId: number
-    ): Promise<OrderInterface> {
+    ): Promise<OrderProducts> {
         // get order to see if it is open
         try {
-            const conn = await db.connect();
-            const sql = 'SELECT * FROM orders WHERE id=($1)';
-            const result = await conn.query(sql, [orderId]);
-            const order = result.rows[0];
+            const order = await this.show(orderId);
 
             if (order.status !== 'open') {
                 throw new Error(
                     `Could not add product ${productId} to order ${orderId} because order status is ${order.status}`
                 );
             }
-
-            conn.release();
         } catch (err) {
             throw new Error(`${err}`);
         }
 
         try {
-            const sql =
-                'INSERT INTO order_products (quantity, order_id, product_id) VALUES($1, $2, $3) RETURNING *';
-
-            const conn = await db.connect();
-
-            const result = await conn.query(sql, [
+            const orderProducts = new OrderProductsStore();
+            const productAdded = await orderProducts.create(
                 quantity,
                 orderId,
-                productId,
-            ]);
+                productId
+            );
 
-            const order = result.rows[0];
-
-            conn.release();
-
-            return order;
+            return productAdded;
         } catch (err) {
             throw new Error(
                 `Could not add product ${productId} to order ${orderId}: ${err}`

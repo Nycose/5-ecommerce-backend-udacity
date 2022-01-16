@@ -41,6 +41,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderStore = void 0;
 var database_1 = __importDefault(require("../database"));
+var OrderProductsModel_1 = require("./OrderProductsModel");
+var order_validation_1 = require("../utils/order-validation");
 var OrderStore = /** @class */ (function () {
     function OrderStore() {
     }
@@ -100,6 +102,7 @@ var OrderStore = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
                         status_1 = order.status, user_id = order.user_id;
+                        (0, order_validation_1.isValidStatus)(status_1);
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
@@ -111,7 +114,32 @@ var OrderStore = /** @class */ (function () {
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_3 = _a.sent();
-                        throw new Error("Could not create user " + err_3);
+                        throw new Error("Could not create order " + err_3);
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    OrderStore.prototype.edit = function (orderId, status) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, result, err_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        (0, order_validation_1.isValidStatus)(status);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = "UPDATE orders SET status = $1 WHERE id=" + orderId + " RETURNING *;";
+                        return [4 /*yield*/, conn.query(sql, [status])];
+                    case 2:
+                        result = _a.sent();
+                        conn.release();
+                        return [2 /*return*/, result.rows[0]];
+                    case 3:
+                        err_4 = _a.sent();
+                        throw new Error("Could not edit order: " + err_4);
                     case 4: return [2 /*return*/];
                 }
             });
@@ -119,7 +147,7 @@ var OrderStore = /** @class */ (function () {
     };
     OrderStore.prototype.destroy = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, err_4;
+            var conn, sql, result, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -134,8 +162,8 @@ var OrderStore = /** @class */ (function () {
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
-                        err_4 = _a.sent();
-                        throw new Error("Could not delete order: " + err_4);
+                        err_5 = _a.sent();
+                        throw new Error("Could not delete order: " + err_5);
                     case 4: return [2 /*return*/];
                 }
             });
@@ -143,47 +171,32 @@ var OrderStore = /** @class */ (function () {
     };
     OrderStore.prototype.addProduct = function (quantity, orderId, productId) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, order, err_5, sql, conn, result, order, err_6;
+            var order, err_6, orderProducts, productAdded, err_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, database_1.default.connect()];
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.show(orderId)];
                     case 1:
-                        conn = _a.sent();
-                        sql = 'SELECT * FROM orders WHERE id=($1)';
-                        return [4 /*yield*/, conn.query(sql, [orderId])];
-                    case 2:
-                        result = _a.sent();
-                        order = result.rows[0];
+                        order = _a.sent();
                         if (order.status !== 'open') {
                             throw new Error("Could not add product " + productId + " to order " + orderId + " because order status is " + order.status);
                         }
-                        conn.release();
-                        return [3 /*break*/, 4];
-                    case 3:
-                        err_5 = _a.sent();
-                        throw new Error("" + err_5);
-                    case 4:
-                        _a.trys.push([4, 7, , 8]);
-                        sql = 'INSERT INTO order_products (quantity, order_id, product_id) VALUES($1, $2, $3) RETURNING *';
-                        return [4 /*yield*/, database_1.default.connect()];
-                    case 5:
-                        conn = _a.sent();
-                        return [4 /*yield*/, conn.query(sql, [
-                                quantity,
-                                orderId,
-                                productId,
-                            ])];
-                    case 6:
-                        result = _a.sent();
-                        order = result.rows[0];
-                        conn.release();
-                        return [2 /*return*/, order];
-                    case 7:
+                        return [3 /*break*/, 3];
+                    case 2:
                         err_6 = _a.sent();
-                        throw new Error("Could not add product " + productId + " to order " + orderId + ": " + err_6);
-                    case 8: return [2 /*return*/];
+                        throw new Error("" + err_6);
+                    case 3:
+                        _a.trys.push([3, 5, , 6]);
+                        orderProducts = new OrderProductsModel_1.OrderProductsStore();
+                        return [4 /*yield*/, orderProducts.create(quantity, orderId, productId)];
+                    case 4:
+                        productAdded = _a.sent();
+                        return [2 /*return*/, productAdded];
+                    case 5:
+                        err_7 = _a.sent();
+                        throw new Error("Could not add product " + productId + " to order " + orderId + ": " + err_7);
+                    case 6: return [2 /*return*/];
                 }
             });
         });

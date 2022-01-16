@@ -40,7 +40,9 @@ exports.OrderController = void 0;
 var type_guards_1 = require("../utils/type-guards");
 var express_1 = require("express");
 var OrderModel_1 = require("../models/OrderModel");
+var OrderProductsModel_1 = require("../models/OrderProductsModel");
 var orderStore = new OrderModel_1.OrderStore();
+var orderProductsStore = new OrderProductsModel_1.OrderProductsStore();
 exports.OrderController = (0, express_1.Router)();
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_1;
@@ -100,32 +102,28 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
-var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orderId, productId, quantity, addedProduct, err_1;
+var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orderId, result, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                _a.trys.push([0, 2, , 3]);
                 orderId = parseInt(req.params.id, 10);
-                productId = parseInt(req.body.productId, 10);
-                quantity = parseInt(req.body.quantity);
-                _a.label = 1;
+                return [4 /*yield*/, orderStore.edit(orderId, req.body.status)];
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, orderStore.addProduct(quantity, orderId, productId)];
+                result = _a.sent();
+                return [2 /*return*/, res.json(result)];
             case 2:
-                addedProduct = _a.sent();
-                return [2 /*return*/, res.json(addedProduct)];
-            case 3:
-                err_1 = _a.sent();
-                res.status(400);
-                res.json(err_1);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                error_4 = _a.sent();
+                if ((0, type_guards_1.isError)(error_4))
+                    res.status(400).send(error_4.message);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orderId, deleted, error_4;
+    var orderId, deleted, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -136,16 +134,127 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 deleted = _a.sent();
                 return [2 /*return*/, res.send(deleted)];
             case 2:
-                error_4 = _a.sent();
-                if ((0, type_guards_1.isError)(error_4))
-                    return [2 /*return*/, res.status(400).send(error_4.message)];
+                error_5 = _a.sent();
+                if ((0, type_guards_1.isError)(error_5))
+                    return [2 /*return*/, res.status(400).send(error_5.message)];
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
+var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orderId, productId, quantity, addedProduct, error_6;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                orderId = parseInt(req.params.id, 10);
+                productId = parseInt(req.body.product_id, 10);
+                quantity = parseInt(req.body.quantity, 10);
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, orderStore.addProduct(quantity, orderId, productId)];
+            case 2:
+                addedProduct = _a.sent();
+                return [2 /*return*/, res.json(addedProduct)];
+            case 3:
+                error_6 = _a.sent();
+                if ((0, type_guards_1.isError)(error_6))
+                    return [2 /*return*/, res.status(400).send(error_6.message)];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+var getOrderProducts = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var result, error_7;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, orderProductsStore.index()];
+            case 1:
+                result = _a.sent();
+                return [2 /*return*/, res.json(result)];
+            case 2:
+                error_7 = _a.sent();
+                if ((0, type_guards_1.isError)(error_7))
+                    return [2 /*return*/, res.status(400).send(error_7.message)];
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+var getProductsByOrderId = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orderId, result, error_8;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                orderId = parseInt(req.params.id, 10);
+                return [4 /*yield*/, orderProductsStore.show(orderId)];
+            case 1:
+                result = _a.sent();
+                return [2 /*return*/, res.json(result)];
+            case 2:
+                error_8 = _a.sent();
+                if ((0, type_guards_1.isError)(error_8))
+                    return [2 /*return*/, res.status(400).send(error_8.message)];
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+var editProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orderId, productId, quantity, result, error_9;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                orderId = parseInt(req.params.orderId, 10);
+                productId = parseInt(req.params.productId, 10);
+                quantity = req.body.quantity;
+                return [4 /*yield*/, orderProductsStore.edit(quantity, productId, orderId)];
+            case 1:
+                result = _a.sent();
+                return [2 /*return*/, res.json(result)];
+            case 2:
+                error_9 = _a.sent();
+                if ((0, type_guards_1.isError)(error_9))
+                    res.status(400).send(error_9.message);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+var destroyProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var productId, orderId, result, error_10;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                productId = parseInt(req.params.productId, 10);
+                orderId = parseInt(req.params.orderId, 10);
+                return [4 /*yield*/, orderProductsStore.destroy(productId, orderId)];
+            case 1:
+                result = _a.sent();
+                return [2 /*return*/, res.json(result)];
+            case 2:
+                error_10 = _a.sent();
+                if ((0, type_guards_1.isError)(error_10))
+                    res.status(400).send(error_10.message);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.OrderController.get('/products', getOrderProducts);
+exports.OrderController.get('/:id/products', getProductsByOrderId);
+exports.OrderController.post('/:id/products', addProduct);
+exports.OrderController.put('/:orderId/products/:productId', editProduct);
+exports.OrderController.delete('/:orderId/products/:productId', destroyProduct);
 exports.OrderController.get('/', index);
 exports.OrderController.get('/:id', show);
 exports.OrderController.post('/', create);
-exports.OrderController.post('/:id/products', addProduct);
+exports.OrderController.put('/:id', edit);
 exports.OrderController.delete('/:id', destroy);

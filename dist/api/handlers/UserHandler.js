@@ -100,7 +100,11 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 throw new Error('User already exists');
             case 2: return [4 /*yield*/, store.create(first_name, last_name, username_1, password, is_admin)];
             case 3:
-                newUser = _b.sent();
+                _b.sent();
+                newUser = {
+                    username: username_1,
+                    is_admin: is_admin,
+                };
                 token = jsonwebtoken_1.default.sign({ user: newUser }, process.env.TOKEN_SECRET);
                 return [2 /*return*/, res.json(token)];
             case 4: return [3 /*break*/, 6];
