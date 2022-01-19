@@ -63,7 +63,7 @@ export class UserStore {
         password: string
     ): Promise<UserInterface | null> {
         const conn = await db.connect();
-        const sql = 'SELECT password FROM users WHERE username=($1)';
+        const sql = 'SELECT * FROM users WHERE username=($1)';
 
         const result = await conn.query(sql, [username]);
 

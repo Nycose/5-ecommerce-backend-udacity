@@ -1,9 +1,22 @@
 import { Router, Request, Response } from 'express';
-import { ProductInterface } from '../interfaces/product';
+import { ProductInterface as IProduct } from '../interfaces/product';
 import { ProductStore } from '../models/ProductModel';
 import { verifyAuthToken } from '../middlewares/auth';
 import { isError } from '../utils/type-guards';
 
+/*
+ *   This file mostly contains function expressions that are HTTP request/response handlers.
+ *   for requests sent to the root URL '/products'
+ *   The sole function of each handler is to unpack the request and send a response to the client.
+ *   Handlers delegate database operations to models that are described below
+ *
+ */
+
+/*
+ *   A model that represents the 'products' table as an object
+ *   Performs CRUD operations on 'products' table
+ *   The 'products' table shows product id, name, price, description, image, category id
+ */
 const productStore = new ProductStore();
 export const ProductController = Router();
 
@@ -28,7 +41,7 @@ const show = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
     try {
-        const product: ProductInterface = {
+        const product: IProduct = {
             name: req.body.name,
             price: parseInt(req.body.price, 10),
             description: req.body.description,
@@ -65,5 +78,5 @@ const getProductCategories = async (req: Request, res: Response) => {
 ProductController.get('/categories', getProductCategories);
 ProductController.get('/', index);
 ProductController.get('/:id', show);
-ProductController.post('/', create);
+ProductController.post('/', verifyAuthToken, create);
 ProductController.delete('/:id', verifyAuthToken, destroy);

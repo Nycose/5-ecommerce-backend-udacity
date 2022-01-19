@@ -10,10 +10,7 @@ var ProductHandler_1 = require("./api/handlers/ProductHandler");
 var UserHandler_1 = require("./api/handlers/UserHandler");
 var OrderHandler_1 = require("./api/handlers/OrderHandler");
 var app = (0, express_1.default)();
-app.use((0, cors_1.default)({
-    origin: 'http://localhost:4200',
-    credentials: true,
-}));
+app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json());
 app.use('/products', ProductHandler_1.ProductController);
 app.use('/users', UserHandler_1.UserController);

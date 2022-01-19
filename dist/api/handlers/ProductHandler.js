@@ -150,5 +150,5 @@ var getProductCategories = function (req, res) { return __awaiter(void 0, void 0
 exports.ProductController.get('/categories', getProductCategories);
 exports.ProductController.get('/', index);
 exports.ProductController.get('/:id', show);
-exports.ProductController.post('/', create);
+exports.ProductController.post('/', auth_1.verifyAuthToken, create);
 exports.ProductController.delete('/:id', auth_1.verifyAuthToken, destroy);

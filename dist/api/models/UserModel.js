@@ -134,7 +134,7 @@ var UserStore = /** @class */ (function () {
                     case 0: return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'SELECT password FROM users WHERE username=($1)';
+                        sql = 'SELECT * FROM users WHERE username=($1)';
                         return [4 /*yield*/, conn.query(sql, [username])];
                     case 2:
                         result = _a.sent();

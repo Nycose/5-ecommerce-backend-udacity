@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { ProductController } from './api/handlers/ProductHandler';
@@ -7,19 +7,18 @@ import { OrderController } from './api/handlers/OrderHandler';
 
 const app: express.Application = express();
 
-app.use(
-    cors({
-        origin: 'http://localhost:4200',
-        credentials: true,
-    })
-);
+// Enable CORS for all origins
+app.use(cors());
+
+// Parse incoming request bodies before other handlers
+// Available under req.body property
 app.use(bodyParser.json());
+
+// Controllers are instances of the express Router object.
+// Each router is an isolated instance of middleware and routes.
+// Each root URL has it's own router/Controller
 app.use('/products', ProductController);
 app.use('/users', UserController);
 app.use('/orders', OrderController);
-
-app.get('/', function (req: Request, res: Response) {
-    res.send('home page works');
-});
 
 export default app;

@@ -132,7 +132,7 @@ var login = function (req, res) { return __awaiter(void 0, void 0, void 0, funct
             case 2:
                 error_4 = _b.sent();
                 if (error_4 instanceof Error) {
-                    res.status(400).send(error_4.message);
+                    return [2 /*return*/, res.status(400).send(error_4.message)];
                 }
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
