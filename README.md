@@ -33,7 +33,7 @@ Your task is to build an API for a shopping application.
 - Create a test suite that covers each endpoint with Jasmine.
 
 
-## Setup
+## Setup instructions for Udacity Reviewer
 
 ### PostgreSQL
 
